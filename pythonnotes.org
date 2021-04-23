@@ -1,0 +1,74 @@
+#+TITLE: Python notes
+
+* Dive into Python
+
+** Chapter 1
++ Notes: All functions return something if not specified in the function than return value will be none
+  no explicit types...
++ Function arguments can be in any order as long as they are named. Once a named argument is used all further arguments must be named.
++ Docstrings: A triple quote starts (and stops) a multiline comment - such as a doc string, They may contain single and double quotes. A docstring if it exists must be the first thing defined in a function - it must start on the first line after the declaration. The docstring is also available at runtime as an attribute of the function.  Also used by IDE's for tooltips.
++ Import search path: search path is a list defined in sys.path. New directories can be added at runtime by adding the directory name to sys.path - sys.path.insert(0 new_path) inserts a new directory as the first item in the list (directories are searched in the order they appear until a .py file whith a name that matches the import statement is found)
++ Once a .py file is imported as a module any of its public functions, classes or attributes are available to other modules or interactively through the REPL
++ when calling a function use moduleName.Function
++ Python functions (like everything else in Python) are objects and have attributes that are available at runtime.
++ Objects in python do not need to have attributes or methods - not all objects are subclassable. Everything is an object in the sense that it can be assigned to a variable or passed as an argument to a function.
++ In Python functions are first class objects and can be passed  as argument to other functions. Modules and classes (or instances of a class) as well
++ Is this the same sort of flexibility that allow for meta-programming in LISP?
++ Indenting code: Instead of using punctuation marks to mark out blocks of code Python uses indentation... Whitespace use must be consistent...
++ Exceptions: Instead of using return codes to indicate errors. Python uses exceptions that once raised need to be handled. Unhandled exceptions will cause a programs execution to halt. Functions dont declare which exceptions may be raised. Not all exceptions are errors - some are fairly easy to anticipate (like a file not opening because it does not exist yet)
++ If a line of code is likely to raise an exception use a try-except block. Use raise statement to generate exceptions.
++ raise statement myExceptionName('optional human readable debugging info') - this creates an instance of the ValueError class and passing the string to its initialization method.
++ Exceptions that are not handled in the function that raises it are passed to the calling function until handled or the program crashes and Python prints a traceback error.
++ One common built in exception is the ImportError - handling it provide a way to have the features of a program gracefully degrade if certain libraries will only be available in certain circumstances.
+  #+BEGIN_SRC python
+    try:
+        import chardet
+    except ImportError:
+        chardet = None
+
+    if chardet:
+        # code based on having chardet librqary
+    else:
+        # the rest of the program
+  #+END_SRC
+
+  #+RESULTS:
+
+  This exception can also be used when there are multiple modules that implement an API to allow one to be used only if the other one is not available without needing to have further code to determin which version was imported.
++ Everything in Python is case sensitive.
++ Modules have several built in attributes. if a module is imported __name__ will be the modules filename (without path info or extension) if the module is run as a standalone __name__ will default to __main__ This can be used for unit testig
+
+** Chapter 2 - datatypes
+*** Native Datatypes
+1. Boolean
+2. Numbers: can be integers fractions, floats, or complex
+3. Strings: sequence of unicode characters
+4. Bytes and byte arrays: binary files etc
+5. Lists: ordered sequence of values
+6. Tuples: orderd immutable sequence of values
+7. Set: unordered collection of values
+8. Dictionaries: unordered collection of key-value pairs.
+Plus lots of other stuff since everything is an object in Python.
++ Boolean 0 = false every other number evaluates to true
++ Lists : Workhorse of basic Python. Can expand dynamically 
+a_list = ['a', 'b', 'c', 'foo']
+a_list[0]= 'a'
+lists can be sliced a_list[1:2] returns ['b', 'c']
+the first number is the number to start with and the second is the number to stop before. If an indice is the first or last item it can be left out
++ Different ways to __main__ipulate lists 
+- aList + ['a', 2.0, True] concatinates the two lists and creates a new list. This operation therefore can eat up alot of memory.
+- the append() method adds an item to the end of a list. Lists are also considered classes with methods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
