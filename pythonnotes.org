@@ -1,4 +1,4 @@
-#+TITLE: Python notes
+#+TITLE: Python notes\
 
 * Dive into Python
 
@@ -34,9 +34,9 @@
 
   #+RESULTS:
 
-  This exception can also be used when there are multiple modules that implement an API to allow one to be used only if the other one is not available without needing to have further code to determin which version was imported.
+  This exception can also be used when there are multiple modules that implement an API to allow one to be used only if the other one is not available without needing to have further code to determine which version was imported.
 + Everything in Python is case sensitive.
-+ Modules have several built in attributes. if a module is imported __name__ will be the modules filename (without path info or extension) if the module is run as a standalone __name__ will default to __main__ This can be used for unit testig
++ Modules have several built in attributes. if a module is imported __name__ will be the modules filename (without path info or extension) if the module is run as a standalone __name__ will default to __main__ This can be used for unit testing
 
 ** Chapter 2 - datatypes
 *** Native Datatypes
@@ -55,20 +55,86 @@ a_list = ['a', 'b', 'c', 'foo']
 a_list[0]= 'a'
 lists can be sliced a_list[1:2] returns ['b', 'c']
 the first number is the number to start with and the second is the number to stop before. If an indice is the first or last item it can be left out
-+ Different ways to __main__ipulate lists 
-- aList + ['a', 2.0, True] concatinates the two lists and creates a new list. This operation therefore can eat up alot of memory.
-- the append() method adds an item to the end of a list. Lists are also considered classes with methods
++
+
+* Python for Everybody - I can at least get credit for doing this\
++ Assignments and badges from webpage. Coursera course!
++ Is based on how to think like a computer scientist but with a focus on data analysis rather than more general programming. I can probably combine this with dive into Python to get a decent intro course. Will also need scripting stuff for the devops....
+** Chapter 1
++ Computers are good at tasks that people are not - like crunching data, repeating simple steps identically etc. Computers are extremely literal, programming requires being precise to avoid syntax errors. Luckily things like LSP exist to warn me when there is a problem.
++ Hardware architecture: I know this stuff already
++ Python as a language: Designed to be easy to read, very popular.
+
+** Chapter 2
++ constants - variables that don't change. 
++ You can't use reserved words.
++ listen to video lectures and do online exercises
 
 
+** Chapter 3
++ Logical operators - and, or, not. Conditional execution: simplest is the if statement. Boolean expression after the if statement is called the condition. The if statement is ended with a colon (:) lines that are part of the statement are indented.
++ Nested conditions can get hard to read - using compound statements with logical operators like and or or...
++ Exceptions: unhandled exceptions will cause a script to halt...
++ conditional execution structure called try / except handles areas like user input that may need to deal with error causing or unexpected results.
++ the except block is only executed in case of an error
+
+#+BEGIN_SRC python
+
+inp = input('Enter Fahrenheit Temperature:')
+try:
+    fahr = float(inp)
+    cel = (fahr - 32.0) * 5.0 / 9.0
+    print(cel)
+except:
+    print('Please enter a number')
+#+END_SRC
+
++ the interpreter jumps to the except block if an error is encountered while executing the try block. Called catching rather than handling the exception
++ Logical expressions are evaluated fri left to right. In expressions that use the and operator if the first statement evaluates to false the second statement is not checked. When evaluation of a compound statement is stopped before all component's are checked it is called short-circuiting the evaluation.
++ Short-circuiting can be used to create guardian patterns. By placing a statement that will evaluate to false for values that would cause issue (divide by 0) first in an and statement the evaluation that would cause an error is never done.
++ 3.9 Debugging: tracebacks provide information on the cause of the error including what the type of error and where it occurred.
 
 
+** Chapter 4 Functions
++ Python comes with a set of built in functions including max, min, len - all of which work on a set of values. The names of built in functions should be treated as keywords.
+*** Conversion functions
++ int will try to turn a value into an integer or it will raise an error. If used on a float it will truncate the number and return the value that is before the decimal point.
+*** Math functions
++ Python include a math module that can be imported (import math) the functions and variables in the module can be accessed through dot notation (math.log10(), math.pi)
+*** Random Numbers
++ actual random numbers are hard to generate. random module produces pseudoranhdom numbers random.random() produces a psudorandom number between >= 0.0 and < 1.0
++ random.randint(low high) produces an integer between low and high (inclusive)
++ random.choice selects an element from a sequence of values.
++ random also contains functions to generate values from common distributions
+*** Adding function
++ function definitions start with def eyword
++ name can contain letters numbers and some punctioation mark. First character can not be a number.
++ First line is the header, followed by the body.Header ends with : the body is indented - convention is usually 4 spaces (Alphabet uses 2 space indentation)
++ Defining a function creates a variable of the same name of type function.
++ Functions need to be defined before they are called
+*** Flow of execution
++ Execution always begins with the first statement of the progrsm and procedes from top to bottom. Function definitions create the function but statements inside the function are not executed until the function is called (that is why if a local var is defined with the same name as a global var inside a function, trying to call the variable before the local declaration does not go to the global definition but instead produces an error.)
+*** Parameters and arguments
++ inside a function arguments are assigned to local values called parameters
+  if in the function call an expression is used as an argument it is evaluated before the function is called and assigned to the parameter
++ void functions (that dont specify a return value) return the value of None of type NoneType
 
+** Chapter 5 - Iteration
+*** While statement
++ the value of the variable used to determine if the loop is finished should be updated in the while block (or else the loop will never exit) The variable that is changed each time the loop runs is called the iteration variable. A infinite loop with a break statement that is executed when some condition is reached in the middle of the loop (user input for instance)
++ continue statement skips to the next iteration without finishing the body of the loop
+*** For loops
++ used when there is a list of items to iterate over or other defined number of iterations to run.
++ called a definite loop instead of an indefinite loop like the while statement
+*** Loop patterns
++ Counting and summing
+  #+BEGIN_SRC python
+    count = 0
+    for itevar in [3, 41, 12, 9, 74, 15]:
+        count = count + 1
+    print('Count: ', count)
+   #+END_SRC
+   This pruints out a count of the number of items in the list. Note that in a for loop the iteration variable does not need to be used in the loop body
 
-
-
-
-
-
-
-
-
+** Chapter 6 - Strings 
++ Individual characters from a string can be accesed using bracket notation.
