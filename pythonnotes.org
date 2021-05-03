@@ -1,4 +1,4 @@
-#+TITLE: Python notes\
+#+TITLE: Python notes
 
 * Dive into Python
 
@@ -55,9 +55,19 @@ a_list = ['a', 'b', 'c', 'foo']
 a_list[0]= 'a'
 lists can be sliced a_list[1:2] returns ['b', 'c']
 the first number is the number to start with and the second is the number to stop before. If an indice is the first or last item it can be left out
-+
 
-* Python for Everybody - I can at least get credit for doing this\
+
+* Other Sources
+** Youtube videos
+
+*** Talks and presentations
+
+*** Tutorials
++ Tech with Tim
+
+
+
+* Python for Everybody - I can at least get credit for doing this
 + Assignments and badges from webpage. Coursera course!
 + Is based on how to think like a computer scientist but with a focus on data analysis rather than more general programming. I can probably combine this with dive into Python to get a decent intro course. Will also need scripting stuff for the devops....
 ** Chapter 1
@@ -137,4 +147,16 @@ except:
    This pruints out a count of the number of items in the list. Note that in a for loop the iteration variable does not need to be used in the loop body
 
 ** Chapter 6 - Strings 
-+ Individual characters from a string can be accesed using bracket notation.
++ Individual characters from a string can be accesed using bracket notation. Index starts at 0...
++ len(myString) returns the length of the string as an integer. Because the index starts at 0 the last character is myString[len(myString-1)] or use negative indices to count backwards from the end.
++ Going through each character in a string is called traversal
+  #+BEGIN_SRC python
+   index =0
+   while index < len(fruit):
+     letter = fruit[index]
+     print(letter)
+     index = index + 1
+   #+END_SRC
+   This prints out each letter in turn on its own line.
+
+ + Strings are immutable
