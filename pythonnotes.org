@@ -117,7 +117,9 @@ except:
 + the interpreter jumps to the except block if an error is encountered while executing the try block. Called catching rather than handling the exception
 + Logical expressions are evaluated fri left to right. In expressions that use the and operator if the first statement evaluates to false the second statement is not checked. When evaluation of a compound statement is stopped before all component's are checked it is called short-circuiting the evaluation.
 + Short-circuiting can be used to create guardian patterns. By placing a statement that will evaluate to false for values that would cause issue (divide by 0) first in an and statement the evaluation that would cause an error is never done.
-+ 3.9 Debugging: tracebacks provide information on the cause of the error including what the type of error and where it occurred.
++ 3.9 Debugging: tracebacks provide information on the cause of the error including what the type of error and where it occurredi.
++ Notes from watching the lecture - I need to get better at paying attention to indentation. I still have issues when looking at python code blocks. Use 4 space indentation. I need to make sure that I have tabexpand set.
++ Multiway branching - elif checks the conditions in the order that they appear. If a true condition is reached the subsequent conditions will not be checked and python will exit the condition code block.
 
 
 ** Chapter 4 Functions
@@ -182,4 +184,4 @@ except:
 + Strings are objects and therefore have methods that are built into the object and are available to each instance
 + Python function dir lists available methods for an object. Type function shows the type of an object
 + methods are called by appending the method name to the object using dot notation. This is called invoking the method 
-+ 
++
