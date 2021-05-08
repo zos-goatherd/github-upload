@@ -50,11 +50,26 @@
 8. Dictionaries: unordered collection of key-value pairs.
 Plus lots of other stuff since everything is an object in Python.
 + Boolean 0 = false every other number evaluates to true
-+ Lists : Workhorse of basic Python. Can expand dynamically 
-a_list = ['a', 'b', 'c', 'foo']
-a_list[0]= 'a'
-lists can be sliced a_list[1:2] returns ['b', 'c']
-the first number is the number to start with and the second is the number to stop before. If an indice is the first or last item it can be left out
+**** Lists : Workhorse of basic Python. Can expand dynamically
+   - a_list = ['a', 'b', 'c', 'foo']
+   - a_list[0]= 'a'
+   - lists can be sliced a_list[1:2] returns ['b'] the first number is the number to start with and the second is the number to stop before.
+     - If an indice is the first or last item it can be left out: a_list[:] returns a copy of the entire list. The copy is a new list and therefore is not the same as the a_list variable despite having the same values
+     - a_list[:-1] returns everything but the last element a_list[1:] returns every element excluding the first
+ + Adding items to a list
+     - the + operator concatenates two lists to create a new list that is immediately assigned to the existing list so
+       #+BEGIN_SRC python
+       my_list = ['a']
+       my_list = my_list + ['b', 'c', 4.0, 5]
+       #+END_SRC
+       Produces my_list['a', 'b', 'c', 4.0, 5]
+     - my_list.append(True) would add true to the end of the list. The append method takes a single argument of any data type and adds it to the end of the list. If you append with a list as the aargument the entire list will be added as a single item (creating amultidimensional list)
+     - my_list.extend(['moreValues', 'False']) will add two more values to the list. Extend takes a list as an argument and adds each item to the list that called it.
+     - my_list.insert(3, 'a') would insert 'a' into the list at the 4th position because list items do not need to be unique my_list would be ['a', 'b', 'c', 'a', 4.0, 5, True, 'moreValues', False]
+     - Lists are an implemented as classes so append,extend, and insert, are methods that operate on a list
++ Searching for values in a list
+  - my_list.count(True) would return 6. The count method returns the index
+
 
 
 * Other Sources
@@ -144,7 +159,7 @@ except:
         count = count + 1
     print('Count: ', count)
    #+END_SRC
-   This pruints out a count of the number of items in the list. Note that in a for loop the iteration variable does not need to be used in the loop body
+   This prints out a count of the number of items in the list. Note that in a for loop the iteration variable does not need to be used in the loop body
 
 ** Chapter 6 - Strings 
 + Individual characters from a string can be accesed using bracket notation. Index starts at 0...
@@ -159,4 +174,12 @@ except:
    #+END_SRC
    This prints out each letter in turn on its own line.
 
- + Strings are immutable
++ empty string is represented by '' and is length 0
++ You can't use someString[someIndex] on the left of an assignment operator to change the character at that location
++ ?Can strings be changed? I assumed that you needed to create a new string and then it could be assigned to the name of the old string.... 'str' obect does not support item assignment... strings are immutable 
+*** String methods
++ comparison operator can be used to put words in alphabetical order. NOTE: All uppercase letters come before the lowercase letters. To compare words without error it is usual to convert them into a common format - often all lowercase before performing the comparison. 
++ Strings are objects and therefore have methods that are built into the object and are available to each instance
++ Python function dir lists available methods for an object. Type function shows the type of an object
++ methods are called by appending the method name to the object using dot notation. This is called invoking the method 
++ 
