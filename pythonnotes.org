@@ -1,7 +1,6 @@
 #+TITLE: Python notes
 
 * Dive into Python
-
 ** Chapter 1
 + Notes: All functions return something if not specified in the function than return value will be none
   no explicit types...
@@ -56,7 +55,7 @@ Plus lots of other stuff since everything is an object in Python.
    - lists can be sliced a_list[1:2] returns ['b'] the first number is the number to start with and the second is the number to stop before.
      - If an indice is the first or last item it can be left out: a_list[:] returns a copy of the entire list. The copy is a new list and therefore is not the same as the a_list variable despite having the same values
      - a_list[:-1] returns everything but the last element a_list[1:] returns every element excluding the first
- + Adding items to a list
+   - Adding items to a list
      - the + operator concatenates two lists to create a new list that is immediately assigned to the existing list so
        #+BEGIN_SRC python
        my_list = ['a']
@@ -67,19 +66,74 @@ Plus lots of other stuff since everything is an object in Python.
      - my_list.extend(['moreValues', 'False']) will add two more values to the list. Extend takes a list as an argument and adds each item to the list that called it.
      - my_list.insert(3, 'a') would insert 'a' into the list at the 4th position because list items do not need to be unique my_list would be ['a', 'b', 'c', 'a', 4.0, 5, True, 'moreValues', False]
      - Lists are an implemented as classes so append,extend, and insert, are methods that operate on a list
-+ Searching for values in a list
-  - my_list.count(True) would return 6. The count method returns the index
+   - Searching for values in a list
+     - my_list.count(True) would return the number of times the value True appear in my_list. The index method returns the index of the first occurrence. The index method can also take a second argument that indicates the index to start searching and a third argument of the index to stop searching. This can allow you to find the index of occurrences of a value other than the first one
+     - a in my_list would return True
+     - if you call index and the value does not occur in the list you will get an exception raised
+   - Removing items from a list
+     - del my_list[1] removes the second item from a list. The third item will then become the second (or if there is no third the list will be of size 1)
+     - my_list.remove('c') will remove the first occurrence of the item 'c' from my_list or raise an exception if the value does not exist.
+     - my_list.pop() will remove the last item from my_list and return the value that it removed
+     - can also be used with the index of the item to remove
+     - pop will raise an exception if called on an empty list
+   - Lists in a Boolean context
+     - empty lists evaluate to false
+     - a list with at least one item is true - even if the value is False.
+**** Tuples
+A tuple is an immutable list, so great for functional programming. my_tuple = ("I", "love", "clojure", "True", 42, 23, 93)
++ Tuple are ordered and have 0 based indices
++ a negative index indicates counting from the end of the tuple
++ slicing a tuple produces a new tuple - my_tuple[1:3] returns ("love", "clojure")
++ tuples have no methods that allow their values to change. you can use index or search using "I" in my_tuple
++ tuples are faster than lists. They are read only so are safer than lists.
++ Some tuples can be used as dictionary keys (tuples that contain immutable values like strings, numbers, or other tuples) Since dictionary keys must be immutable lists dont work
++ The tuple() function takes a list and returns a tuple. The list() function takes a tuple and returns a list
++ To create a tuple of one item you need to put a comma after the item or else python will ignore the parentheses so type((False)) returns bool while type((False,)) returns tuple
++ Tuples can be used to assign multiple values at once. t = (1, '1', 2, 3.0)
+  (var1, var2, var3, var4) = t results in var1 being equal to 1 var2 being equal to '1' and so on
++ you can use tuples to have a function return multiple values and either have the caller keep the values in a tuple or break them out into individual variables, or make a list for that matter
 
-
-
+**** Sets
+A set is an unordered collection of unique values of any immutable datatype. With two sets you can do set operations like union, intersection, and set difference.
++ Creating a set my_set{1, 2, 'a', True}
++ my_other_set = set(my_list) creates a set from my_list
++ you can create an empty set a_set = set()
++ the empty set is represented by set() {} is a dictionary for some reason... so not_a_set = {} creates am empty dictionary
++ my_set.add(3) will add 3 to my_set. my_set.add(1) will do nothing as a set is made up of unique values so adding an existing value does not create multiple occurrences
++ my_set.update() takes an argument of a set and adds each member to the calling set.
++ the update method can actually be called with multiple sets and will combine all the values with the ones from the original set
++ update can be used with lists as well
++ removing items from a set - discard method takes a single value and removes it from a set If the value is not part of the set it is a no-op (does not raise an exception)
++ remove also takes a value out of a set but raises an error if the value was not part of the set
++ pop method will remove a random value from a set and returns it. Since sets are unordered there is no way of predicting which value will be removed. If pop is called on an empty set it raises an exception
++ clear method removes all values so you end up with an empty set. clear is equivalent to taking a_set_with_some_values = set() which overwrites the previous values with an empty set
++ someValue in a_set return true if the value is in the set
++ a_set.union(b_set) returns a set with the values from both sets.(either set)
++ a_set.intersection(b_set) returns a set of the common values that are in both sets
++
 * Other Sources
-** Youtube videos
+** [[[[https://www.youtube.com/watch?v=qbLc5a9jdXo]]][Rest API]]
+Commonly APIs use JSON - key value pairs much like an object it JS(where it
+came from) or a dictionary in python. REST is representational state
+transfer - requests over the web that are responded to with JSON. Allows back
+end and front end to communicate. API provides better security so that front
+end JS is not directly accessing the database. The API allows for the same
+API to be used by different front ends. Modular approach allows changes to
+the back end to be made without causing problems for the front end as long as
+the back end maintains the same endpoints. By making only certain endpoints
+public you can allow the public to consume certain services without exposing
+the entire system to the public.
++ Different methods of requesting data from the server
+- GET is used to retrieve data
+- POST is used to write data to the server
+- DELETE to delete stuff
+- PUT used to update data? overlaps with POST
+accronym CRUD (create, )
 
 *** Talks and presentations
 
 *** Tutorials
 + Tech with Tim
-
 
 
 * Python for Everybody - I can at least get credit for doing this
@@ -129,13 +183,13 @@ except:
 *** Math functions
 + Python include a math module that can be imported (import math) the functions and variables in the module can be accessed through dot notation (math.log10(), math.pi)
 *** Random Numbers
-+ actual random numbers are hard to generate. random module produces pseudoranhdom numbers random.random() produces a psudorandom number between >= 0.0 and < 1.0
++ actual random numbers are hard to generate. random module produces pseudo-random numbers random.random() produces a pseudo-random number between >= 0.0 and < 1.0
 + random.randint(low high) produces an integer between low and high (inclusive)
 + random.choice selects an element from a sequence of values.
 + random also contains functions to generate values from common distributions
 *** Adding function
-+ function definitions start with def eyword
-+ name can contain letters numbers and some punctioation mark. First character can not be a number.
++ function definitions start with def keyword
++ name can contain letters numbers and some punctuation marks. First character can not be a number.
 + First line is the header, followed by the body.Header ends with : the body is indented - convention is usually 4 spaces (Alphabet uses 2 space indentation)
 + Defining a function creates a variable of the same name of type function.
 + Functions need to be defined before they are called
@@ -145,6 +199,13 @@ except:
 + inside a function arguments are assigned to local values called parameters
   if in the function call an expression is used as an argument it is evaluated before the function is called and assigned to the parameter
 + void functions (that dont specify a return value) return the value of None of type NoneType
+*** Notes from the videos
++ Advantages of functions - store and reuse
++ new keyword def.
++ return without a parameter ends the function (like break ends a loop)
++
+
+
 
 ** Chapter 5 - Iteration
 *** While statement
@@ -162,6 +223,17 @@ except:
     print('Count: ', count)
    #+END_SRC
    This prints out a count of the number of items in the list. Note that in a for loop the iteration variable does not need to be used in the loop body
+*** Notes from video lectures
++ for loop is a definite loop - the number of iterations is known before the loop starts.
+**** Solving problems with loops
++ for things in data - look for or do something to each item in data. Do something with the results
++ compare and update a variable for each item in data (largest_so_far)
++ like moving a window across the array and writing something down at each stop
++ updating a counter for each item in the data - wouldnt this be the same as taking the size of an array or something?
++ keeping a total by adding each value to a variable with both a count and a total you have the average
++ filtering in a loop. having a conditional that triggers if the value for an item in the data being iterated over meets some criteria. Also can use a boolean that is changed if some value is found/condition met (or use a function to return the triggered state)
++ None type. None is a constant, can be used to indicate that a variable has not had a value assigned to it yet.
++ is (or is not) operator can be used to see if a variable is set to None. Sort of like the == checks for type an value, stronger, use with booleans and None to avoid confusion
 
 ** Chapter 6 - Strings 
 + Individual characters from a string can be accesed using bracket notation. Index starts at 0...
@@ -184,4 +256,9 @@ except:
 + Strings are objects and therefore have methods that are built into the object and are available to each instance
 + Python function dir lists available methods for an object. Type function shows the type of an object
 + methods are called by appending the method name to the object using dot notation. This is called invoking the method 
-+
++ The in operator is a boolean operator that takes two strings and return True if the first appear as a ubstring in the second.
++ Python dir function lists the methods available for an object
++ type function shows the type of an object
++ help gets simple documentation on a method.
++ python.org is a more complete source of documentation.
++ the find method
