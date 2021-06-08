@@ -38,7 +38,6 @@
 + Modules have several built in attributes. if a module is imported __name__ will be the modules filename (without path info or extension) if the module is run as a standalone __name__ will default to __main__ This can be used for unit testing
 
 ** Chapter 2 - datatypes
-*** Native Datatypes
 1. Boolean
 2. Numbers: can be integers fractions, floats, or complex
 3. Strings: sequence of unicode characters
@@ -49,7 +48,7 @@
 8. Dictionaries: unordered collection of key-value pairs.
 Plus lots of other stuff since everything is an object in Python.
 + Boolean 0 = false every other number evaluates to true
-**** Lists : Workhorse of basic Python. Can expand dynamically
+*** Lists : Workhorse of basic Python. Can expand dynamically
    - a_list = ['a', 'b', 'c', 'foo']
    - a_list[0]= 'a'
    - lists can be sliced a_list[1:2] returns ['b'] the first number is the number to start with and the second is the number to stop before.
@@ -79,7 +78,7 @@ Plus lots of other stuff since everything is an object in Python.
    - Lists in a Boolean context
      - empty lists evaluate to false
      - a list with at least one item is true - even if the value is False.
-**** Tuples
+*** Tuples
 A tuple is an immutable list, so great for functional programming. my_tuple = ("I", "love", "clojure", "True", 42, 23, 93)
 + Tuple are ordered and have 0 based indices
 + a negative index indicates counting from the end of the tuple
@@ -93,7 +92,7 @@ A tuple is an immutable list, so great for functional programming. my_tuple = ("
   (var1, var2, var3, var4) = t results in var1 being equal to 1 var2 being equal to '1' and so on
 + you can use tuples to have a function return multiple values and either have the caller keep the values in a tuple or break them out into individual variables, or make a list for that matter
 
-**** Sets
+*** Sets
 A set is an unordered collection of unique values of any immutable datatype. With two sets you can do set operations like union, intersection, and set difference.
 + Creating a set my_set{1, 2, 'a', True}
 + my_other_set = set(my_list) creates a set from my_list
@@ -110,7 +109,51 @@ A set is an unordered collection of unique values of any immutable datatype. Wit
 + someValue in a_set return true if the value is in the set
 + a_set.union(b_set) returns a set with the values from both sets.(either set)
 + a_set.intersection(b_set) returns a set of the common values that are in both sets
-+
++ a_set.difference(b_set) returns a  new set with elements that are members of a that are not in b
++ a_set.symmetric_difference(b_set) returns a new set that contain elements that were in exactly one of the sets.
++ a_set.issubset(b_set) returns true is all elements in a are also in b
++ b_set.issuperset(a_set) reverse of above
++ boolean value of an empty set is False, other sets (ones with at least one element) are True. Value of the elements does not matter.... so a set that contains the string False and nothing else will evaluate to true.
+*** Dictionaries
+- Unordered
+- key value pairs.
+- when a key is added it must also have a value
+- optimized for using the key to find the value, but not good at finding the key when you know the value.
+- Acts like a hash in Perl 5
+**** Creating a dictionary
++ my_dict = {'server': 'db.diveintopython3.org', 'database': 'mysql'}
++ you can't look up keys from the value.
++ no predefined size limit you can add new key-value pairs and you can modify the value of an existing ey
++ you can't have duplicate keys
++ dictionaries are unordered
++ keys are case sensitive so User != user
++ Dictionaries values can be any datatype including other dictionaries.
++ dictionary keys are more restrictied they can be strings integers and a few other types. You can mix and match key types
++ len() gives you the number of keys in a dictionary
+**** In a boolean context
++ empty dictionary is false
++ all others are true
+*** None
+None is a special constant - not the same as False
++ Comparing to anything other than None will return False
++ has its own datatype NoneType
++ You can assign None to any variable but you can not create other NoneType objects. All variables with the value of None are equal to each other
++ In a boolean context None is false and not None is true
+
+** Chapter 3 Comprehensions
+*** Detour - Working with Files and directories
+Python comes with os module that contains functions for working with the filesystem, environment and processes. Python tries to have a unified API across all supported operating systems so that programs can run with a minimum of platform specific code
+
+**** Current working directory
+- there is always a current working directory, in the REPL, when running a script etc.
+-  Python os module has two functions os.getcwd() returns the working directory and os.chdir('/path/to/where/I/want') - note that on a windows machine the last command would take me to c:\path\to\where\I\want
+
+**** Working with Filenames and Directory names
+os.path contains functions for manipulating file and directory names
+- os.path.join will construct a pathname from one or more partial pathnames
+- python will work out if you need forward or backslashes...
+- os.path.expanduser() will expand ~ into the current users home directory Even on windows!
+-
 * Other Sources
 ** [[[[https://www.youtube.com/watch?v=qbLc5a9jdXo]]][Rest API]]
 Commonly APIs use JSON - key value pairs much like an object it JS(where it
@@ -130,11 +173,34 @@ the entire system to the public.
 - PUT used to update data? overlaps with POST
 accronym CRUD (create, )
 
-*** Talks and presentations
 
-*** Tutorials
-+ Tech with Tim
+* [[https://youtu.be/JeznW_7DlB0][Tech with Tim OOP for beginners ]]
+Tutorial that gets into more advanced elements of Python
++
+* Data structures and Algorithms in Python
+** Chapter 1
++ an alias can be created by assigning a second identifier to an object. Because identifiers behave like pointers if a change is made through one identifier than it will be apparent when using the other alias. If one of the names is assigned to another value using an assignment statement it will break the alias and the identifier will point to the new object. So temp = 98.6, other = 98.6 temp = temp +1, temp now = 99.6 but other = 98.6
+**** the bool class
++ methods that return information about an object without changing it state ar known as accessors. Methods that do change the state of an object are known as mutators or update methods
++ creating a new instance of a class is instatiation. This can be done by calling a constructor method. Many built in classes have support for a literal for for designating a new instance temp = 9.8 creates a float. 9.8 is a literal form. A function or method can return an instance of a class
++ Python supports both traditional function calls myfunc(my, param) as well methods called through dot notation
+*** 1.2.3 Python's Built in Classes
 
+|-----------+-------------------------------------+-----------|
+| Class     | Description                         | Immutable |
+|-----------+-------------------------------------+-----------|
+| bool      | Boolean Value                       | Yes       |
+| int       | integer                             | Yes       |
+| float     | floating point                      | yes       |
+| list      | ordered list                        | no        |
+| tuple     | immutable ordered list              | Yes       |
+| str       | list of characters                  | yes       |
+| set       | unordered grouping of unique values | no        |
+| frozenset | immutable form of set               | yes       |
+| dict      | associative mapping                 | no        |
+
++ bool - usually created in literal form.
++ int and float
 
 * Python for Everybody - I can at least get credit for doing this
 + Assignments and badges from webpage. Coursera course!
@@ -256,9 +322,80 @@ except:
 + Strings are objects and therefore have methods that are built into the object and are available to each instance
 + Python function dir lists available methods for an object. Type function shows the type of an object
 + methods are called by appending the method name to the object using dot notation. This is called invoking the method 
-+ The in operator is a boolean operator that takes two strings and return True if the first appear as a ubstring in the second.
++ The in operator is a boolean operator that takes two strings and return True if the first appear as a substring in the second.
 + Python dir function lists the methods available for an object
 + type function shows the type of an object
 + help gets simple documentation on a method.
 + python.org is a more complete source of documentation.
-+ the find method
++ the find method finds the index of a substring in a string. Can also use a second argument to indicate where the search should start.
++ strip method removes white space characters such as space tab and newline.
++ myString.startswith('someString') returns True if myString starts with someString
++ line.lower().startswith('h') will return True if the string line starts with h or H
+*** Parsing Strings
+Finding and copying a portion of a string
++ to find the domain portion of an e-mail in a string - step 1 find the @ sign. Step 2 find the first space after the @ sign. Step 3 copy the string from 1 further than the @ to one before the space.
++ Documentation for the find method Finding and copying a portion of a string
+  + to find the domain portion of an e-mail in a string - step 1 find the @ sign. Step 2 find the first space after the @ sign. Step 3 copy the string from 1 further than the @ to one before the space.+ Documentation for the find method https://docs.python.org/library/stdtypes.html#string-methods
+*** Format operator
++ the format operator % lets you use variables in the construction of strings. When % is applied to integers it is the mod operator but when the first operand is a string the % is the format operator.
++ The first operand is the format string which contains format sequences that specify how the second operand is formatted. The output is a formatted string - the format sequence %d means that the second operand should be formatted as an integer (the d stands for decimal) '%d' % my_int produces a string of the integer in my int
++ To format a sentence you can include the format sequence in a string.
+  #+BEGIN_SRC python
+  my_int = 42
+  print('I have spotted %d camels.' % camels)
+  #+END_SRC
++ If there are multiple format sequences in a string the second argument needs to be a tuple. Each format sequence is matched with an element in order. The number and type of the elements in the tuple must match the format sequence. %g is use to format floats and %s is used to format strings
+  #+BEGIN_SRC python
+  print('In %d year I have spotted %g %s.' % (3, 0.1, 'camels'))
+  #+END_SRC
++ more info https://docs.python.org/library/stdtypes.html#printf-style-string-formatting
+*** Debugging
++ When designing a program it is important to think of all the things that could go wrong and what possible inputs the user will try to use to crash the program.
++ When using an if statement to check what the first character is it is important to deal with blank lines. if userInput[0] == 'something' will produce an error if userInput is empty. One way is to use useInput.startswith('something') which will return False if the string i empty.
++ Gaurdian patterns - if the first part of a statement with an and operator is False the second part is never evaluated. This can be used to prevent errors
+  #+BEGIN_SRC python
+  if len(line) > 0 and line[0] == '#':
+  #+END_SRC
+  will not produce errors from line[0] trying to evaluate an empty string because the python interpreter will stop evaluating the compound statement when len(line) > 0 evaluates to false
+*** Notes from video lecture
+Strings have indexes just like arrays lists, tuples. Indexes can be calculated values. If you try to index past the size of a string you get an error (some methods handle this better than others). Last element is len(someString) - 1.
++ Looping through strings - used to look for or count something. Can write the loop to count based on the result of the length method. Using a for loop is the preferred approach, unless you need the index(iteration variable) for something else.
+  #+BEGIN_SRC python
+  for letter in string:
+      print(letter)
+  #+END_SRC
+  will print out the letters in string just like
+  #+BEGIN_SRC python
+  index = 0
+  while index < len(string):
+      letter = string[index]
+      print(letter)
+      index = index + 1
+  #+END_SRC
++ you can do all the iteration stuff like looking for a value or counting the number of occurrences or find the largest or smallest value
++ the in operator - the iteration variable (letter) iterates through the sequence. The block of code is executed once for each value in the sequence. The iteration variable moves through all the values in the sequence.
++ the in expression is also a logical expression that returns True or False and can be used in an if statement.
+  #+BEGIN_SRC python
+  fruit = 'banana'
+  'n' in fruit
+  # will return True
+  'm' in fruit
+  # will return False
+  #+END_SRC
+**** String functions
+Strings have a bunch of built in functions that I should probably study
+Many of these functions return an altered string. Because strings are immutable the content of the strings is not changed
+**** Video part 2 slicing strings
++ If you omit either of the end point from a string slice it will assume you
+mean either the beginning or the end of the string. 
+ 
+** Chapter 7 Files
+*** Notes From video
++ Text files can be thought of as a sequence of lines. 
++ To open a file we use:  handle = open(filename, mode) - filename is a
+string, mode will be r to read from the file or w to write to the file
++ If the file does not exist you get an error. 
++ newline character represented by \n this is considered one character (like
+all of the escape codes. 
+*** 7.1 Persistence
++  
