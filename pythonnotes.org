@@ -148,12 +148,20 @@ Python comes with os module that contains functions for working with the filesys
 - there is always a current working directory, in the REPL, when running a script etc.
 -  Python os module has two functions os.getcwd() returns the working directory and os.chdir('/path/to/where/I/want') - note that on a windows machine the last command would take me to c:\path\to\where\I\want
 
+
 **** Working with Filenames and Directory names
 os.path contains functions for manipulating file and directory names
 - os.path.join will construct a pathname from one or more partial pathnames
 - python will work out if you need forward or backslashes...
-- os.path.expanduser() will expand ~ into the current users home directory Even on windows!
--
+- os.path.expanduser() will expand ~ into the current users home directory Even on windows! It will not put a trailing slash on the path but the join() function will do that automatically when joining the filename to the path
+- os.path.split(pathname) will take a path and return a tuple with the path and the filename. You can use multivariable assignment to assign the two parts of the filename to variables contained in a tuple.
+- you can also use is.splitext that takes a filename and returns a tuple of the name and the extension.
+
+**** listing directiries
+- thr Python standard library also has a glob module to make it easier to get the filenames you need from a directory. use import glob to start using globs.
+
+
+
 * Other Sources
 ** [[[[https://www.youtube.com/watch?v=qbLc5a9jdXo]]][Rest API]]
 Commonly APIs use JSON - key value pairs much like an object it JS(where it
@@ -173,7 +181,11 @@ the entire system to the public.
 - PUT used to update data? overlaps with POST
 accronym CRUD (create, )
 
-
+* Corey Schafer
+** Unit testing
++
+** Python oop
++
 * [[https://youtu.be/JeznW_7DlB0][Tech with Tim OOP for beginners ]]
 Tutorial that gets into more advanced elements of Python
 +
@@ -396,6 +408,173 @@ mean either the beginning or the end of the string.
 string, mode will be r to read from the file or w to write to the file
 + If the file does not exist you get an error. 
 + newline character represented by \n this is considered one character (like
-all of the escape codes. 
+all of the escape codes.
++ It is also possible to read the content of a file one character at a time but this is a less common approach than reading the file line by line.
++ When reading from a file the line will include whitespace and the newline character
++ To itterate through a file by line use a for loop.
+  afile = open('myfile.txt')
+  count = o
+  for somevar in afile:
+      count = count + 1
+  print('the line count is:' count)
++ It is possible, though not necessarily a good idea, to read an entire file into a string - newline characters and all.
+  fhand = open('smallfile.txt')
+  bigstring = fhand.read()
++ Searching through a file. In this case we are searching through an mbox file for all the lines that begin with From: (indicating the beginning of a new e-mail) ?how efficient is this?
+  fhand = open('mbox-short.txt')
+  for line in fhand:
+      if line.startswith('From:') :
+        print(line)
++ this will print out blank lines between each line as the print statement will append a newline to the line from the file that already ends with a newline
++ As these extra newlines and extra whitespace is a common problem we can use strip() and rstrip() that removes whitespace from the end of the string.
++ A slightly different way to structure the same thing
+  #+BEGIN_SRC python
+#!/ur/bin python3
+
+fhand = open('mbox-short.txt')
+for line in fhand:
+    line = line.rstrip()
+    if not line.startswith('From:') :
+        continue
+    print(line)
+
+#+END_SRC
+This way of writing it works if you want to do one or two things or simply skip some lines and then will have a big block of code acting on the lines that match your criteria...
++ Using in to select lines - We can look for a substring anywhere in a line using in. This example will print out all of the lines that contain a gmail address.
+   #+BEGIN_SRC python
+#!/ur/bin python3
+
+fhand = open('mbox-short.txt')
+for line in fhand:
+    line = line.rstrip()
+    if not '@gmail.com' in line :
+        continue
+    print(line)
+
+#+END_SRC
++ the open() function takes a string as a parameter. You can get the string to use as the target filename from input or another file. As this will cause an error if the file does not exist in the working directory or the permissions on the file do not allow for the operation we are trying it is best to use some form of gatekeeping to prevent the program from ending with a traceback.
+
++ One simple way is to use a try and except block.
+
++ quit() ends a program without an error code
+
++ This basic pattern of opening a file and reading lines, removing whitespace, will be in almost every program.
 *** 7.1 Persistence
-+  
++ When we open a file with myfilevar = open('afilename') open return a file handle object that allows us to perform file operations
++ if the file does not exist the operation will fail with a traceback
++ A text file can be considered a series of lines with the end of each line indicated by a newline character (\n in python) \n
++ to load an entire file into memory using the fhandle.read() function. Actually the read function can be used to return a specified number of bytes, the default of - return the whole file. Also it apparently can't be run on the same file handle twice.
++ using the find method to find lines
+  #+BEGIN_SRC python
+#!/ur/bin python3
+
+fhand = open('mbox-short.txt')
+for line in fhand:
+    line = line.rstrip()
+    if line.find('@gmail.com') == -1: continue
+    print(line)
+
+#+END_SRC
+
+*** Writing files
++ fout = open('filename.txt', 'w')
++ if the file already exists opening it with the w option will overwrite the file....
++ might be a good idea to put checks in before opening a file this way to make sure that the file does not already exist.
++ fout.write(astring) will write astring to the file opened with fout and will return the number of characters written.
++ You can cal write again and it will append to the end of the text already writen (it is opening the file in write mode that deletes the previous file)
++ We need to make sure to manage the end of line and insert newline characters where appropriate. The write method does not automatically end the string it is writing to the file with a newline ?DOES IT INSERT A SPACE?
++ To make sure that all changes are written to disk we need to explicitly close the file with fout.close(). It is probably a good idea to do the same with files opened for reading, though since Python will do so when the program ends it is sometimes ommited.
++ If there is an issue with whitespace we can use the repr(badstring) function to see what is going on. It will print out a string with things like tabs and newline represented by escape sequences so we can see what is going on with the non printing characters.
++ Some OSs use characters other than \n for newline. I am fairly sure M$ use \r....
++ May need to convert or have some sort of a function to clean up the format if I am moving between OSs
+
+
+** Chapter 8 - Lists
+*** Notes from Video Part 1
++ Data structures are an important part of making an algorithm work. A
+datastructure is  a collection of values. Different datastructures provide
+different ways that the values are related and different built in ways to
+perform operations on the values.
++ Lists can contain values of different types.
++ Lists can contain other lists.
++ for loops (definite loops) are used with lists
++ To access the elements of a list we use the index of the value starting
+from 0
++ lists are mutable - unlike strings and tuples you can change the value
+contained at a particular index. This can make lists more flexible but also
+slower than some other data types
++ list.len() will return the number of items contained in a list
++ the range(x) returns a list starting from 0 with x number of items. This is 
+often used in conjunction with len() to construct loops. For instance if you
+have a list of names you want to send greetings to -
+#+BEGIN_SRC python
+
+for i in range(len(friends)) :
+    friend = friends[i]
+	greet(friend)
+#+END_SRC
++ this use of range and length lets you keep track of the index as you
+iterate through the loop and use the value for whatever you need. An example
+is in the script to retry a call to a system resource that waits between
+calls for a time dependent on how many times it has already tried. 
+*** Notes from video part 2
++ Concatinating lists using + . Using the plus operator we can create a new
+list that consists of the values of a list appended to the values of a second
+list. listc = lista + listb
++ Slicing: list[x:y] x is the first element to include, y is the first
+element to exclude. If you omit either number it will use either start from
+the first element or include the last element.
++ list methods: there are a whole bunch of list related methods. It is
+probably worth spending time reading up on the documentation as none of the
+courses spend enough time on this
+  - append: mylist.append(x) will add the value of x to the end of the list
+  - creating an empty list: stuff = list() , this calls on the constructor
+  class, it is also possible to use [  ]
+  -  Python provides two operators that let you check if items are in a list.
+  The in operator returns true if the value before the in is an element of
+  the list so 9 in numbers would return true if the number 9 was an element
+  of the list numbers. Also has a not in operator that returns true if the
+  value before the not in is not in the list
+  - Lists are in order and can be sorted with the sort method. It will try to
+  arrange the items in the list in some sort of order. Lists are mutable so
+  this will change the order of the items in place
+  - There are various built in functions for lists like len, max, min, and
+  sum These can be combined in various ways to do many of the tasks that I
+  would usually need to write a function to do in another language. Some of
+  these are not built into lists but rather take lists as an argument (so
+  function notation rather than dot notation like the methods for the string
+  class)
+  - In some cases using a list rather than a loop to average a bunch of
+  numbers is faster, but it takes more memory and may not scale well.
+*** Notes from Video Part 3
++ Strings and lists. Often used in conjunction. Use similar notation.
++ The split function (myString.split()) and returns a list of strings. (Can
+also be used with a delimiter to work with CSV files I think)
++ 
+
+*** A list is a sequence -
++ Several ways to create new lists - simplest is to enclose an element(s) in square brackets.
++ elements of a list do not need to be of the same type.
++ objects like lists can be elements of a list - this is how to create a multidimensional/nested list
++ to create an empty list []
++ a list can be assigned to a variable even = [0,2,4,6,8]
++ lists are mutable, you can access a list element by its index (position starting from 0)
++ integer expressions can be used as indecencies
++ attempting to access an element that does not exist is an IndexError
++ negative values count back from the end of the list
++ the in operator works on lists
+
+*** Traversing a list
+
++ Most commonly done with a for loop for somevar in mylist: if you only need to read the elements of the list.
++ If you intend to do things with the elements you will need to use:
+
+  for i in range(len(mylist)):
+      mylist[i] = somethingelse
+
++ the range function returns a list from 0 to n-1 where in this case we are using len(mylist) as n
+
++ a for loop over an empty list never executes the code in the body
+
++ a nested list counts as a single element no matter how many elements it has (it is a single object)
+*** List operations
