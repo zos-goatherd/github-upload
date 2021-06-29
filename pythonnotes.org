@@ -157,11 +157,24 @@ os.path contains functions for manipulating file and directory names
 - os.path.split(pathname) will take a path and return a tuple with the path and the filename. You can use multivariable assignment to assign the two parts of the filename to variables contained in a tuple.
 - you can also use is.splitext that takes a filename and returns a tuple of the name and the extension.
 
-**** listing directiries
-- thr Python standard library also has a glob module to make it easier to get the filenames you need from a directory. use import glob to start using globs.
+**** listing directories
+- the Python standard library also has a glob module to make it easier to get the filenames you need from a directory. use import glob to start using globs.
 
+** Chapter 4 Strings
 
+*** Other Common String Methods 4.5
+Besides formatting there are a number of other methods for strings.
++ You can use triple quotation marks for multi-line strings
++ the splitlines() method takes a multi-line string and returns a list of strings. The carriage return at the end of each line is not included.
++ lower() method converts the entire string to lowercase
++ upper() yep
++ count() takes a string and returns the number of occurrences in the calling string.
++ example:
+  #+BEGIN_SRC python
+query = 'user=pilgrim&database=master&password=PapayaWhip'
+a_list = query.
 
+#+END_SRC
 * Other Sources
 ** [[[[https://www.youtube.com/watch?v=qbLc5a9jdXo]]][Rest API]]
 Commonly APIs use JSON - key value pairs much like an object it JS(where it
@@ -549,7 +562,7 @@ courses spend enough time on this
 *** Notes from Video Part 3
 + Strings and lists. Often used in conjunction. Use similar notation.
 + The split function (myString.split()) and returns a list of strings. (Can
-also be used with a delimiter to work with CSV files I think)
+also be used with a delimiter to work with CSV files I think) By splitting the string into list items it is possible to easily access the n'th word or item from the string.
 + 
 
 *** A list is a sequence -
