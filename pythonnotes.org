@@ -562,9 +562,23 @@ courses spend enough time on this
 *** Notes from Video Part 3
 + Strings and lists. Often used in conjunction. Use similar notation.
 + The split function (myString.split()) and returns a list of strings. (Can
+<<<<<<< Updated upstream
 also be used with a delimiter to work with CSV files I think) By splitting the string into list items it is possible to easily access the n'th word or item from the string.
 + 
 
+=======
+also be used with a delimiter to work with CSV files. Defaults to whitespace to split if you do not specify a delimiter
++ Once you have split a string into a list you can easily traverse each word with a loop. Can also be one with the find method and using : to slice but that is harder for most people
++ when splitting by a character other than empty spaces the split function is not as clever - if there are 3 semicolons in a row it will create 3 empty items in the list while 3 blank spaces would be treated as a single space.
++ when extracting data from a text file you may need to use multiple splits one after another.
+*** Lists Files and Guardian Patterns
++ when you encounter a bug it can be difficult to tell exactly what was going on that caused the problem. By inserting a print statement right before the line where the error occurred to indicate the values of key variables it can be easier to see what caused the issue
++ A guardian pattern keeps code that might cause issues from being executed. For instance if you are reading through a file checking each line for a word making sure that blank lines that trying to check the content of would cause an index out of bounds error (because a blank line has no words to check).
++ Guardian patterns can be used in a compound statement
+  if len(wds) < 3 or wds[0] != 'From' :
+      continue
+  the order is important as the guardian pattern needs to short circuit the part of the evaluation that could cause an error.
+>>>>>>> Stashed changes
 *** A list is a sequence -
 + Several ways to create new lists - simplest is to enclose an element(s) in square brackets.
 + elements of a list do not need to be of the same type.
@@ -591,3 +605,15 @@ also be used with a delimiter to work with CSV files I think) By splitting the s
 
 + a nested list counts as a single element no matter how many elements it has (it is a single object)
 *** List operations
++ The + operator concatenates lists
++ The * operator repeats a list the given number of times
++ The slice operator works on lists like it does on strings
+*** List Methods
++ append adds a new element to the end of the list
++ extend takes a list as an argument and appends all of the elements
++ sort arranges the elements of a list from low to high *I need to look up how this handles different datatypes*
++ Most list methods are void - because lists are mutable they modify the list n place and return None. So t = t.sort() will give you t = [None]
+*** Deleting elements
++ if you know the index of the item you can use pop. Pop modifies the list and returns the list element being removed. If used with no argument it will remove the last element.
++ del removes an item and does not return anything del mylist[someindex]
++ If you
