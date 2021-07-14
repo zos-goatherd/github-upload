@@ -142,11 +142,7 @@ None is a special constant - not the same as False
 
 ** Chapter 3 Comprehensions
 *** Detour - Working with Files and directories
-Python comes with os module that contains functions for working with the filesystem, environment and processes. Python tries to have a unified API across all supported operating systems so that programs can run with a minimum of platform specific code
-
-**** Current working directory
-- there is always a current working directory, in the REPL, when running a script etc.
--  Python os module has two functions os.getcwd() returns the working directory and os.chdir('/path/to/where/I/want') - note that on a windows machine the last command would take me to c:\path\to\where\I\want
+Python comes with os module that contains functions for working with the filesystem, environment and processes. Python tries to have a unified API across all supported operating systems so that programs can
 
 
 **** Working with Filenames and Directory names
@@ -160,6 +156,10 @@ os.path contains functions for manipulating file and directory names
 **** listing directories
 - the Python standard library also has a glob module to make it easier to get the filenames you need from a directory. use import glob to start using globs.
 
+**** Getting File Metadata
+Stuff like creation date, last modified, size.... Python uses the same API for every OS. You can access metadata without opening the file using myVar = os.stat('myFilename')  The os.stat() function returns an object with the different metadata.
++ To access the modification time use myVar.st_mime to get the time since Epoch. To convert this into a more convenient format use import time from the Python standard library. The time module contain functions to convert time formats as well as format time stamps into strings and for dealing with timezones. To convert from seconds since Epoch use time.localtime(myVar.st_mime) This will return a structure that tells you year month day hour minute second....
++ myVar
 ** Chapter 4 Strings
 
 *** Other Common String Methods 4.5
@@ -240,7 +240,6 @@ Tutorial that gets into more advanced elements of Python
 + You can't use reserved words.
 + listen to video lectures and do online exercises
 
-
 ** Chapter 3
 + Logical operators - and, or, not. Conditional execution: simplest is the if statement. Boolean expression after the if statement is called the condition. The if statement is ended with a colon (:) lines that are part of the statement are indented.
 + Nested conditions can get hard to read - using compound statements with logical operators like and or or...
@@ -265,7 +264,6 @@ except:
 + 3.9 Debugging: tracebacks provide information on the cause of the error including what the type of error and where it occurredi.
 + Notes from watching the lecture - I need to get better at paying attention to indentation. I still have issues when looking at python code blocks. Use 4 space indentation. I need to make sure that I have tabexpand set.
 + Multiway branching - elif checks the conditions in the order that they appear. If a true condition is reached the subsequent conditions will not be checked and python will exit the condition code block.
-
 
 ** Chapter 4 Functions
 + Python comes with a set of built in functions including max, min, len - all of which work on a set of values. The names of built in functions should be treated as keywords.
@@ -295,7 +293,6 @@ except:
 + new keyword def.
 + return without a parameter ends the function (like break ends a loop)
 +
-
 
 
 ** Chapter 5 - Iteration
@@ -501,7 +498,6 @@ for line in fhand:
 + Some OSs use characters other than \n for newline. I am fairly sure M$ use \r....
 + May need to convert or have some sort of a function to clean up the format if I am moving between OSs
 
-
 ** Chapter 8 - Lists
 *** Notes from Video Part 1
 + Data structures are an important part of making an algorithm work. A
@@ -561,13 +557,7 @@ courses spend enough time on this
   numbers is faster, but it takes more memory and may not scale well.
 *** Notes from Video Part 3
 + Strings and lists. Often used in conjunction. Use similar notation.
-+ The split function (myString.split()) and returns a list of strings. (Can
-<<<<<<< Updated upstream
-also be used with a delimiter to work with CSV files I think) By splitting the string into list items it is possible to easily access the n'th word or item from the string.
-+ 
-
-=======
-also be used with a delimiter to work with CSV files. Defaults to whitespace to split if you do not specify a delimiter
++ The split function (myString.split()) and returns a list of strings. (Can also be used with a delimiter to work with CSV files. Defaults to whitespace to split if you do not specify a delimiter
 + Once you have split a string into a list you can easily traverse each word with a loop. Can also be one with the find method and using : to slice but that is harder for most people
 + when splitting by a character other than empty spaces the split function is not as clever - if there are 3 semicolons in a row it will create 3 empty items in the list while 3 blank spaces would be treated as a single space.
 + when extracting data from a text file you may need to use multiple splits one after another.
@@ -578,7 +568,7 @@ also be used with a delimiter to work with CSV files. Defaults to whitespace to 
   if len(wds) < 3 or wds[0] != 'From' :
       continue
   the order is important as the guardian pattern needs to short circuit the part of the evaluation that could cause an error.
->>>>>>> Stashed changes
+
 *** A list is a sequence -
 + Several ways to create new lists - simplest is to enclose an element(s) in square brackets.
 + elements of a list do not need to be of the same type.
@@ -616,4 +606,277 @@ also be used with a delimiter to work with CSV files. Defaults to whitespace to 
 *** Deleting elements
 + if you know the index of the item you can use pop. Pop modifies the list and returns the list element being removed. If used with no argument it will remove the last element.
 + del removes an item and does not return anything del mylist[someindex]
-+ If you
++ If you know the element you want to remove but not the index you can use myList.remove(element) the remove method returns None
++ the del method works with slicing so del myList[2:4] would remove the 3rd and 4th element of myList
+*** Lists and Functions 8.8
+built in functions that can be used on lists:
++ len(myList) returns the number of elements
++ max(myList) returns the largest element (look into how this function handles mixed types)
++ min(myList) returns the smallest element
++ sum(myList) returns the sum of the elements (look into how this handles non-numeric and mixed types) *answer* only works on numeric types. The other functions will work on other types that can be compared.
++ sum and len can be combined to get the average of a list. Using this method to calculate the average of a list of numbers should be more efficient than running the calculations inside a loop.
+*** Lists and Strings 8.9
+In Python a list of characters is not a string (dive into Python3 section on character encoding covers this in some detail) [[*Chapter 4 Strings]]
++ To convert from a string to a list of characters myList = list(myString) because list is the name of a built in function it should not be used as a variable; also l (lower case L) looks like a 1 (one) it is not a good idea to use them in situations where they might be confused
++ to break a string into words use the split method. This allows you to use the index of the list of individual words to access a perticular word. myString.split(delimiter) will split based on the character passed to the method as delimiter
++ join takes a list of strings and concatenates the elements. Join is a string method so it is invoked on the delimiter with a list of strings passed to it as an argument: delimiter = ' '; delimiter.join(myListofStrings) You can pass an empty string "" to join the string with no seperating character
+*** Parsing Lines 8.10
+Often when reading a line from a file or other source of data we will want to extract some element from the line. Usually we want to split the string so we can iterate over the elements of the string.  \
+#+BEGIN_SRC python
+fhand = open('mbox-short.txt')
+for line in fhand:
+    line = line.rstrip()
+    if not line.tartswith('From '):continue
+    words = line.split()
+    print(words[2])
+
+#+END_SRC
+
+*** Objects and Value 8.11
+If two variables have the same value we can use the is operator: a is b, this will return True if the variables both point to the same object and False if they just happen to have the same value. If you assign to variables the same string they will refer to the same object (strings are immutable, so while you can change one variable to point to some other value it is not possible to modify the string the variable points to) if you assign to variables to lists with the same set of values Python will create 2 lists that are equivalent but not identical.
+*** Aliasing 8.12
+The association between a variable and an object is a reference. If you want two variables to refer to the same list you can use a = [1, 2, 3, 4] and b = a. In this case because the list has more than one reference we say that the object is aliased. In this case because both a and b refer to the same object any changes to a will also change b. /Aliasing mutable object is an error prone way of writing code/ With string and other immutable objects (like tuples) aliasing is not a problem.
+*** List Arguments 8.13
+When a list is passed to a function the function gets a reference to the list and can make changes to the list (scope issue) Both the parameter in the function and the variable in the calling block will point to the same object. A variable used in the function - even if it has the same name as the parameter - will not be the same though. So if you have a function
+#+BEGIN_SRC python
+def bad_delete(t):
+    t = t[1:]
+#+END_SRC
+will not change the value of t or the list it refers to outside of bad_delete as the slice operator return a new list that the new variable t points to. Using t.pop(0) should alter the list t refers to outside of the function. A better option than that would be to write a function that returns a new list.
+Because of this it is important to be aware of how operators and methods deal with lists. Some of them return a new list while others make changes to the list. As an example the append method modifies a list(and returns None) but the + operator creates a new list. *See the notes I made on list methods in the dive into python3 section*
+*** Debugging 8.14
+Mutable objects can create strange behaviors when used without understanding how they might change at runtime.  \
+**** Common Pitfalls
+1. Most list methods modify the argument and return None. This behavior is opposite of the way similar methods work on strings and tuples. So if you try something like myString = myString.sort() you will end up with myString == None
+2. Because there are several different ways to do common list operations it is best to learn them one at a time to avoid accidentally combining the syntax of two of them in ways that don't cause runtime errors but produce odd results.
+3. remember that methods like sort modify the list so if you plan on using the original list for anything it is best to make a copy. It is important to do so in a way that does not simply create an aliase so originalList = myList[:] You can also try and stick to functions that return new lists like sorted instead of sort...
+4. When reading from a file there is the possibility of unexpected input that can cause runtime errors. It is good practice to revisit the guardian pattern section when reading a file and try and make sure that the program can handle edge cases. In some cases a solution that will work well on properly formatted input is too simple to handle common situations. A common issue is when looking for a word in a line to split the string into a list of words. If the line is empty trying to iterate over an empty list will result in an index out of range error.
+
+
+** Chapter 9 - Dictionaries
+Otherwise known as a hash table. Items consist of unordered key:value pairs. You can find a value from a key easily but can't search for a key base on its value (you can reverse a dictionary using comprehensions though)
++ If you try to access an item with a key that is not in the dictionary you will get an exception.
++ len(myDict) wll return the number of key value pairs.
++ The in operator returns True if something is a *key* in the dictionary so myKey in myDict will let you know if myKey is in fact a keys
++ To see if something is a value in a dictionary you need to use vals = list(myDict.values()) and then use in on vals. The list function turns the result of the values method into a list that can then be checked for the value.
++ *The in operator uses a linear search on lists. As the list grows in length the search time goes up in proportion. For dictionaries Python uses a hash table so the search is in constant time.*
+*** Dictionary as a set of Counter 9.1
+There are several different ways we could count the occurrences of each letter in a string: You could create a value for each letter and then use chained conditional statement to increment each counter. You could create a list with an element for each letter and increment the value of the element for each occurrence. Or you could just use a dictionary. \
+Some of the advantages of using a dictionary include only needing to create entries for the items being counted that exist as well as being able to search for an item using the hash rather than using a linear search through a list...
++ Dictionaries have the get(key, default) that returns the value of a key if it exists or default if it does not. *This is a Python idiom and is very common*
++ Looping and dictionaries: if you traverse a dictionary with a for statement you will traverse the *keys*
+  If you want to order the contents of a dictionary you can make a list of the keys in the dictionary using the keys method. Sort the resulting list, and then loop through the list looking up each value based on the key extracted in order from the list of keys.
++ Advanced text Parsing: The basic implementation of a word count can't handle real prose as the split function uses whitespace leaving in punctuation marks attached to some words and our comparison does not take into account capitalization.
+  - The translate method can be used on a string to delete specified characters.
+  - python has a list of punctuation in string.punctuation in the string library
+  - to remove the extra whitespace line.rstrip()
+*** Debugging large datasets
++ Try scaling down the size you are testing - modify the program so that it is only running on the first 10 (or whatever number you want) lines of the file/elements. Once you have handled any errors you can increase the size
++ Check summaries and types - You can print out information like the size of a dictionary or list. The total sum of a list (if you have something to compare it to) You can also print out the type of a variable to make sure that it will not cause errors
++ Write self-checks - you can work in some basic sanity checks. For instance if you are calculating an average also print the high and low number to make sure that the average is between them. Also try comparing the results of different computations to make sure the results are consistent.
++ Format the output to make it easy to spot errors.
+Spending a bit of time writing out test code can make the process of writing the production code easier.
+*** Dictionaries lecture I, II 
+Very powerful data structure. Unlike a list items are not ordered. Key-Value pairs. Known as associative Arrays in Perl/PHP, Properties or HashMaps in Java, and Property Bag in C#/.Net 
++ Dictionary Literals: use {} and contain a list of key:value pairs - myDict = {'name' : 9 , 'someOtherValue' : 10, 'soOn' : 'blah'}
++ example: count occurrences of a value. You can use a dictionary to add values as a key if the value is new or add to a count that is saved as the value for each key. One frustration is that you will need to run a check to see if the key already exists in the dictionary (use the in operator) as referencing a key that is not in the dictionary will throw an exception ?(why is this a problem? I would think that this is the behavior I would want from a datastructure rather than simply adding a key to the dictionary if I try to access a key that does not exist yet)
++ get method for dictionaries. The process of checking to see if a key is in a dictionary and if it is not add it with some default value is a common operation. The get method allows this to happen in one statement so instead of
+
+ #+BEGIN_SRC python
+  if name in counts:
+      x = counts[name]
+   else :
+      x = 0
+      #+END_SRC
+  you can use
+  =x = counts.get(name, 0)=
+ it lets you avoid a traceback if name is not a key in counts.
+#+BEGIN_SRC python
+counts = dict()
+names = ['csev', 'cwen', 'csev', 'xqian', 'cwen']
+for name in names
+    counts[name] = counts.get(name, 0) + 1
+printcounts)
+ #+END_SRC
+
+*** Video Lecture Dictionaries III and Counting word frequency using a dictionary lecture
++ Counting Words in Text: The general pattern to count the words in a line of text is to split the line into words and then loop through the words and use a dictionary to track the occurrences of each word
+  #+BEGIN_SRC python
+  counts = dict()
+  print('Enter a line of text')
+  line = input('')
+
+  words = line.split()
+
+  print('Words:', words)
+
+  print('Counting...')
+  for word in words:
+      counts[word] = counts.get(word, 0) + 1
+  print('Counts', counts)
+  #+END_SRC
+
++ Definite loops and dictionaries: Despite dictionaries not having an order to their elements we can write a for loop that goes through all of the keys and looks up the corresponding values
+ counts = {a bunch of keys: with a bunch of values}
+ for key in counts:
+     print{key, counts[key]}
+
+**** Dictionary methods
++ Retrieving lists of keys and values:
+  - list(myDict) will return a list containing the keys from the dictionary
+  - myDict.keys() will also return a list containing the keys
+  - myDict.values() returns a list containing the values from the dictionary
+  - myDict.items() returns a list of tuples each of which contains a key and the corresponding value.
+\NOTE:\ If you use the keys() an values() methods right next to each other they will create lists in the same order. While the order is unpredictable it will not change between adjacent statements
++ Two iteration variables: When looping through a dictionary we need a variable for the key and a variable for the value
+  #+BEGIN_SRC
+for aaa,bbb in myDict.items():
+    print(aaa, bbb)
+
+#+END_SRC
+
+This is a feature that is unique to Python...
++ Most common word in a file
+  #+BEGIN_SRC python
+name = input('Enter file:')
+handle = open(name)
+
+counts = dict()
+for line in handle:
+    words = line.split()
+    for word in words:
+        count[word] = counts.get(word, 0) + 1
+
+bigcount = None
+bigword = None
+for word,count in counts.items():
+    if bigcount is None or count > bigcount:
+        bigword = word
+        bigcount = count
+
+print(bigword, bigcount)
+
+#+END_SRC
+*** Word Counting demonstration
+IT is a good idea to put print and other tests in code as you write it so that you can find bugs as you write the code rather than trying to go back and figure out which part of a larger program is failing.
+
+** Chapter 10 Tuples
+*** Tuples Lecture Notes I, II
+Tuples are like lists but are immutable like strings. They are indexed starting at 0. Instead of using [] when assigning values use () for tuples - though you still use [] when referencing an index. Of the methods and functions used with lists count and index can be used with tuples. Because tuples are immutable they can be used as keys for dictionaries. \
+Tuples are more efficient than lists and if you only need to retrieve data a tuple is a faster and uses less memory. Tuples work well for temporary variables that will only be used briefly. Lists on the other hand are more often used when building up a datastructure.
++ Tuples can be used on the left-hand side of an assignment statement. (x,y) = (4, 'fred') you can return tuple from a function.
++ Tuples are comparable - The comparison goes through the items in order comparing each value to the corresponding value in the tuple being compared until Python finds an element that differs. This also works with < and > comparing index 0 and if they are equal comparing each subsequent element until one is larger or smaller. The rest of the values are not compared so (0, 1, 10000) is < (0, 2, 3). *How are comparisons between differing datatypes handled?*
+**** Sorting lists of tuples
+This can be used to get a sorted version of dictionary values.
+sorted(myDict(items()))
+this produces a sorted list of tuples sorted by the key.
++ to sort by values we need to create our own data structure. In this case we are creating a list of tuples sorted by value. To do this we can use a for loop that appends to a new list tupples with the value first and then the key. We can then sort the new list and have the contents of the dictionary sorted by value.
+#+BEGIN_SRC python
+myDict = {'a':10, 'b':1, 'c':22}
+tmp = list()
+for k, v in myDict.items()
+    tmp.append( (v, k) )
+# This writes tuples that consist of the value followed by the key from the dictionary to the list tmp
+print(tmp)
+# this will print out the value followed by the key in no perticular order
+tmp = sorted(tmp, reverse=True)
+print(tmp)
+# This will sort tmp by value in decending order
+#+END_SRC
+
++ To print out the 10 most common words from a file:
+#+BEGIN_SRC python
+fhand = open('romeo.txt')
+counts = dict()
+for line in fhand:
+    words = line.split()
+    for word in words:
+        counts[word] = counts.get(word, 0 ) + 1 
+
+lst = list()
+for key, val in counts.items():
+    newtup = (val, key)
+    lst.append(newtup)
+
+lst = sorted(lst, reverse=True)
+
+for val, key in lst[:10] :
+    print(key, val)
+#+END_SRC
++ short version to sort a dictionary  by value 
+print( sorted( [ (v,k) for k,v in myDict.items()]))
+this use lambdas and list comprehensions \  
+the statement inside of the square brackets creates a list dynamically without assigning it to a variable. 
+*** Sorting dictionary by values with tuples lecture notes
+tmp = list()
+for k,y in dictionary.items() :
+    newtup = (v,k)
+    tmp.append(newtup)
+
+tmp = sorted(tmp)
+
+*** Tuples chapter notes
+Because tuples are immutable they can be used as kkey values in dictionaries. They are also comparable so they can be sorted and hashable. 
++ a tuple is a comma-seperated list of values. It is common to enclose tuples in parentheses to make the code more readable. 
++ To create a single element tuple you need to include a following comma so 
+=myTuple = ('a',)=
+withou the comma python would evaluate ('a') as a string
++ An empty tuple can alo be created with the tuple() function: =myTuple = tuple()=
++ If the argument of the tuple function is a sequence (string, list, or tuple)the tuple will contain the elements of the sequence =myTuple = tuple('string')creates mytuple with elements ('s', 't', 'r', 'i', 'n', 'g')
++ best not to use tuple as a variable name as it is the name of the constructor function. 
++ Some list operators also work with tuples. Tuple elements can be refered to using [] The slice operator works to select a range of elements. 
++ While you can't change the value of an element of a tuple you can replace one tuple with another one. Like a string...
++ When comparing collections python tarts by comparing the first element from each sequence. Only if they are equal does python check the next element (much like putting words in alphabetical order) This also applies to the sort function 
++ Pattern for working with sequences *DSU*
+- Decorate a sequence by building a list of tuples with one or more sort keys preceding the elements from the sequence 
+- Sort the list of tuples using Python's built in sort
+- Undecorate by extracting the sorted elements of the sequence
+
+As an example to sort a lit of word from longet to shortest.
+#+BEGIN_SRC python 
+txt = 'but soft what light in yonder window breaks'
+words = txt.split()
+t = list()
+for word in words:
+    t.append(len(word), word)
+
+t.sort(reverse=True)
+
+res = list()
+for length, word in t:
+    res.append(word)
+#+END_SRC
+
+**** Tupple assignment
+In Python you can have a tuple on the left side of an assignment statement. This allows you to assign more than one variable at a time when the left side is a sequence. In these cases it is standard to ommit the () so if myList has 3 elements =x, y, z = myList= will assign myList[0] to x, myList[1] to y.... This can be also used to swap the value of two variables do we can do =a,b = b, a=
++ In this case the left side is a tuple of variables while the right side of the assignment is a tuple of expressions
++ the number of varuables on the left side if the assignment must match the number of values on the right
++ The right side of the assignment can be any type of sequence - list, string, or tuple. so if =addr = 'some@email.com' \  uname,domain = addr.split('@')= will split an email address into the username and domain. 
+**** Dictionaries and tuples
+Dictionaries have a method called items that returns a list of tupples. Each tuple is a key value pair. The elements are in no order when placed in the list but can be sorted by traversing the list and comparing the tuples. If we want to sort by the value rather than the key we will need to reverse the sequence by writing to a new list of tuples with the values and the key reversed. The new list can then be sorted. 
+
++ To traverse the eys and values of a dictionary in a single loop 
+for key, val in list(myDict.items()):
+    print(val, key)
+  
+This loop has two iteration variables because items() returns a list of two item tuples. For each iteration of the loop both key and val are iterated (/aren't they a tuple in and of themselves because of how they are assigned?/) 
+
+**** Tuples as keys in dictionaries 
+If we want to use a composit key in a dictionary we need to use tuple rather than lists. Because a dictionary is a hash map we need to use the hashable tuple rather than the mutable list. \  
+An example of a case where we would use a composit key is in a telephone directory where we want the number (the value) associated with the firstname/lastname pair. so if we have variables first, last, and number we can assign them to a dictionary with =directory[last,first] = number= \  
+To traverse this directory with a tuple assignment
+for last, first in directory:
+    print(first, last, directory[last,first])
+
+**** sequences
+Most of the teqniques in this chapter can be aplied to other compound structures besides lists of tuples - they work with tuples of tuples, lists of lists and tuples of lists? apparently... Instead of handling each case individualy we will look at sequences of sequences in general.  
++ Strings have several limitations, they are immutable and can only contain characters. If you will need to change individual characters a list of characters may be the better option.
++ Tuples have some advantages over lists
+- Tuples can be easier to create than a list: for example in return statements. 
+- In cases where you need an immutable type such as dictionary keys
+- When passing a sequence to a function tuples reduce unexpected behaviors due to aliasing 
+- While tuples don't have methods like sort and revere the functions sorted and reversed can be used on any sequence to return a new sequence with the order altered. 
+
+Compound datastructures can cause error if the programmer looses track of the shape of the structure 
+
+** Regular expressions 
