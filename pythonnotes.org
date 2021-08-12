@@ -1,6 +1,6 @@
 #+TITLE: Python notes
 
-* Dive into Python
+* Dive into python3
 ** Chapter 1
 + Notes: All functions return something if not specified in the function than return value will be none
   no explicit types...
@@ -879,4 +879,384 @@ Most of the teqniques in this chapter can be aplied to other compound structures
 
 Compound datastructures can cause error if the programmer looses track of the shape of the structure 
 
-** Regular expressions 
+** Regular expressions
+[[file:~/Dropbox/notes/python-regex.md::REGEX from python for everybody][<Notes for this chapter in REGEX for Python notes>]]
+
+** Chapter 12 Networked Programs
+*** Notes from text
+Requesting and parsing HTTP 
+*** Video Lecture Part 1, 2
+**** How networking works - This will start at the transport layer
+We will assume the lower levels are working and we have a socket connection to the networked resource we are trying to communicate with. A TCP port number, by convention, matches the type of service we are trying to connect to. Python ha built in support for TCP sockets. =import socket= to use in your script. You then need to create a sockket object with =mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)= and then associate it with a connection =mysick.connect( ('data.py4e.org', 80) )= This creates a stream socket rather than a block socket.
+
+At this point we have a connection so we move on to the application layer. The *Application Protocol* outlines how the communication procedes. Possible protocols include HTTP (the one we will mostly be looking at), mail, gopher (yea right), ftp (also not common these days) When you click on a link the browser makes a connection to port 80 on the server specified by the URL and sends a GET request. The server responds with the document requested. A get request needs to be formated as GET http://some.host.com HTTP/1.0
+
+**** Lets write a browser \  
+
+     #+BEGIN_SRC python 
+         import socket 
+
+         mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+         mysock.connect(('data.pr4e.org', 80))
+         cmd = 'GET http://data.pr4e.org/romeo.txt HTTP/1.0\n\n'.encode()
+         mysock.senc(cmd)
+
+         while TRUE:
+             data = mysock.recv(512)
+             if (len(data) < 1):
+                 break
+             print(data.decode())
+         mysock.close()
+     #+END_SRC
+     
+The mysock.connect may throw an exception if there is a problem with network connectivity. The GET request contains a blank line due to the protocol requiring it. We then create a receive connection that stays open until we get a response of length 0 indicating the transmission is over. In the response there will be a blank line between the header portion of the response and the data. The data.decode will work on 'plain text' but if the url we request points to a binary file we would need to put it in a file and open it
+
+**** Worked Sample code 
+/example in code 3 folder/
+This seems like a copy of the material in video 3
+
+**** Video lecture 4 Characters and strings 
+
+Character encoding is more complex than ASCI. UNICODE is a lot more complex but UTF-8 abstracts most of that away. UTF-32 is huge, UTF-16 is used on some countries, but UTF-8 is dynamicaly sized and is compatible with ASCI. UTF-8 can represent UTF-32 is needed. In Python 2 unicode and string were different but in Python 3 strings are Unicode and bytes are the outlier.
+When we are receiving data from outside sources strings may be in byte format so we need to be ready for non-UTF string. That is why we use decode on the information received over a socket. In some situations we may need to encode what we are sending out in some format other than the default...
+In the code block above we used the encode() method on the string containing the GET command, the default encoding is UTF-8 though we could give the encode method arguments that specify other encoding types. When we receive data back we need to use the decode method to turn the external byte array (UTF-8) data into a Python string before printing.
+
+**** Video 5 urllib
+
+Because of how common working with http servers has become Python3 has a library to make tasks like retrieving a html document even easier.
+#+BEGIN_SRC python
+
+import urllib.request, urllib.parse, urllib.error
+
+fhand = urllib.request.urlopen('http://data.pr4e.org/romeo.txt')
+for line in fhand:
+    print(line.decode().strip())
+#+END_SRC
+
+ This code retrieves the html document into an object that acts like a file handle. We can then loop through the object and read out each line and decode it. The default behavior of urlopen is to strip out the headers, though we can keep them if necessary.
+
+ To do a word count on a html document on a server
+
+ #+BEGIN_SRC python
+
+ import urllib.request, urllib.parse, urllib.error
+
+ fhand = urllib.request.urlopen('http://data.pr4e.org/remeo.txt')
+
+ counts = dict()
+ for line in fhand:
+     words = line.decode().split()
+     for word in words:
+         counts[word] = counts.get(word, 0) + 1
+ print(counts)
+ #+END_SRC
+
+l
+
+**** Video 6 HTML parsing
+What do you do with webpages once you have retrieved them.
++ Webscraping - when a program pretends to be a browser and retrieves web pages, extracts information, and then looks at more web pages
++ spidering - when your program follows the links on the pages you scrape to find the next pages to scrape.
+
+Why scrape?
++ Data collection, what pages are linked together?
++ Retrieve your own data without needing an export tooltips
++ Monitor a site for new information
++ creating a search engine
+
+Some web pages don't like being scraped and will try and block you (or shut down accounts if you have one) Often html is creative in ways that make using regex to parse them difficult. The BeautifulSoup library from www.crummy.com handles parsing html for you.
+
+** Chapter 13 Using Web services
+*** Video Web Services Part 1
+HTTP became popular so it has become a way for applications to exchange data. The machine readable formats we will cover are xml and JSON (not covered TOML, YAML) The 'wire format' provides a way for programs that may use different internal representations for data to have an agreed upon format. The data is serialized into the wire format for transmission and then de-serialized on the other end.
++ JSON is probably the more popular, it is simpler than xml
++ XML is used as a document format by some programs.
+*** Video Web Services 2 - XML
+eXtensible Markup Language Probably caught on because it looked a bit like HTML and people thought <> looked neat
++ Start tag <someTag>
++ end tag </someTag>
++ Attribute <tag myAttr="urpy"/>
++ self closing tag </someTag>
+XML is fairly unforgiving when it comes to syntax.
++ XML tends to ignore whitespace, line breaks are ignored, indentation is for humans.
++ The structure of nodes is important, parent and child tags will matter when parsing the document
++ XML can be understood as a tree, one root tag with branching child tags with their own children and siblings.
++ content of tags is modeled as child of the tag it is contained in.
++ attributes are also children of the tag they are attached to and therefore siblings of the textual data in the tag they modify.
++ you can have multiple attribute for a tag but only one text node per tag.
+XML can also be parsed by tracking out the path from one node to the root of the document.
+*** Worked example XML
++ Element tree will raise exceptions if there is a problem with the XML.
++ So try except /I must accept/
+*** Web Services 3: XML Schema
++ Describes the legal format of XML documents.
++ Validates XML between two applications.
++ XML Schema Contract is in a format of XML.
++ Many XML Schema languages
++ We are looking at the W3C Schema spec (also called .XSD for the file-type)
+So I think what is going on here is the schema outlines the types of tags, if the element is required, type of data, proper formatting for date and time(yyyy-mm-ddTGMT) and the other information a XML validation program needs to check the XML document.
++ To work with XML in Python we are using xml.etree.ElementTree
+*** Web Services 4: JSON & Discovering JSON
++ More common than XML these days.
++ datastructure mimics the way languages like JS and Python represent data
++ JSON is not a standard, defined by the guy who wrote JS the good parts (I should read that book)
++ uses {} to enclose key:value pairs
++ Python works with JSON as nested lists and dictionaries instead of as a complex object as XML is represented.
++ JSON is very similar to other ways data has been exchanged by different software
++ was published by the inventor so he could claim it wa a standard and use it at his day job
+*** Web Services 5 SOA, JISC e-Framework
+Service Oriented approach
++ Designing software around networked services. One program does not do everything, instead it provides an interface to access other software
++ Often grows organically out of needs of the moment
++ SOA provides a service layer between systems.
++ Avoids extra effort in trying to get micro-services to talk to each other
++ data as a service, probably using REST API
+*** Web Services 6 GeoJSON, Web Service 7 Twitter, Worked Examples
++ write software that consumes data provided by an API
++ start by reading the documentation that explains the URL and the encoding rules for the request.
++ trial and error and practice is the only way to learn how to do this stuff
++ Google offers less of their geolocation stuff for free, I should use my credits while they are still good.
++ In a url + is space and % is ,
++
+*** Notes from book
+
+**** 13.2 Parsing XML
+  simple program to parse XML and extract some data elements 
+     #+BEGIN_SRC python
+import xml.etree.ElementTree as ET
+
+data = '''
+<person>
+  <name>Chuck</name>
+  <phone type="intl">
+    +1 734 303 4456
+  </phone>
+  <email hide="yes" />
+</person>'''
+
+tree = ET.fromstring(data)
+print('Name:', tree.find('name').text)
+print('Attr:', tree.find('email').get('hide'))
+     #+END_SRC
+
++ fromstring convert the string representation of XML into a tree of XML elements. Once the XML is in tree format we can use a series of methods to extract the data we are looking for.
++ find searches the XML tree and retrieves the elements that match the specified tag. 
+
+  A XML parser like ElementTree has the advantage of allowing us to ignore the complexity of proper XML syntax. In more complex situations this can be very important. /I would not like to need to write a regex to extract data/ 
+
+**** 13.3 Looping Through Nodes 
+     When XML has multiple nodes we need a loop to process all of them. The following code loops through all of the user nodes
+     #+BEGIN_SRC python
+import xml.etree.ElementTree as ET
+
+input = '''
+<stuff>
+  <users>
+    <user x="2">
+      <id>001</id>
+      <name>Chuck</name>
+    </user>
+    <user x="7">
+      <id>00</id>
+      <name>Brent</name>
+    </user>
+  </users>
+</stuff>'''
+
+stuff = ET.fromstring(input)
+
+lst = stuff.findall('users/user')
+print('User count:', len(lst))
+
+for item in lst:
+    print('Name', item.find('name').text)
+    print('Id', item.find('id').text)
+    print('Attribute', item.get('x'))
+
+    #+END_SRC
+
++ findall retrieves a Python list of subtrees that represent the user structure in the XML tree 
++ it is necessary to include all parent level elements in the findall statement except for the top level element or Python will not find any nodes. The following would not find any users 
+    #+BEGIN_SRC python
+lst = stuff.findall('user')
+print('User count:', len(lst))
+     #+END_SRC
+
+**** 13.4 JSON 
+     Since JSON is based on JS and JS was influenced by Python there are similarities between the JSOn format and Python lists and dictionaries. 
++ Unlike XML in JSON we don't have attributes, just a series of key value pairs. 
++ Instead of a top level element the tart of a JSON object is marked by {}
++ Used for data exchange between programs as it maps well to the basic data structures 
++ JSON can be contructed by nesting dictionaries and lists.
++ JSON contains fewer details than XML so we need more knowledge in advance about the structure of the data we are getting.
+
+#+BEGIN_SRC python
+import json 
+
+data = '''
+[
+  { "id" : "001",
+    "x" : "2",
+    "name" : "Chuck"
+  } ,
+  { "id" : "009",
+    "x" : "7",
+    "name" : "Brent"
+  }
+]'''
+
+info = json.loads(data)
+print('User count:', len(info))
+
+for item in info:
+    print('Name', item['name'])
+
+print('Id', item['id'])
+print('Attribute', item['x'])
+
+#+END_SRC
++ Because json.load() returns a Python list we can simply access it like any list of dictionaries 
+
+**** 13.6 API 
+     Using HTTP we can send data between applications and we can represent data on the wire using XML or JSON /these days JSON/ To define the services available to other applications and how to acces them we define an API. 
++ When the functionality of a program includes access to services provided by other programs we use *Service-oriented architecture* (SOA) 
++ SOA has many advantages including that we only maintain one copy of the data and that the owner of the data maintains control. One disadvantage is that performace can suffer multiple bottlenecks.
++ It is common to require the use of an API key to make use of a service that is exposed to the web. In some cases even OAuth. For these cases there are a range of libraries available 
+
+**** 13.9 Google geocoding web service 
+
+
+
+
+** Chapter 14 Object Oriented Python
+*** Video 1 Python Objects
++ Focus of the class is not OOP so this chapter is a terminology only chapter.
++ Objects provide a way of abstracting away details that beginners like me don't need to know to use the libraries/objects. Basic collection types are objects /actually anything that has methods/
+
+definitions:
+- Class: A template
+- Method or Message: a defined capability of a class
+- Field/attribute: A bit of data in a class
+- Object/Instance: An instance of a class
+
+*** Video 2
++ Class is a reserved keyword
+**** A Sample Class
+#+BEGIN_SRC python
+class PartyAnimal:
+    x = 0
+
+    def party(self):
+        self.x = self.x + 1
+        print("So far".self.x)
+
+an = PartyAnimal()
+
+an.party()
+an.party()
+an.party()
+
+#+END_SRC
++ Methods are like functions but are part of a method and are not valid outside of the method
++ self is an alias of the instance of the class that is automatically passed to the methods of the class when the instance of the object calls the method. /Basically you are telling the method that it is to act on the instance that called it/
++ Before you use a class you need to construct an instance of it.
++ the dir() function lists an objects methods telling you what its capabilities are.
++ y = 'Hello there' actually creates an object of type string and then assigns the string to the new object.
++ since you can use type() and dir() on classes that you create it is a good idea to write doc strings.
+
+*** Video 3, 4
++ Objects are created, used, and discarded
++ Objects have blocks of code called constructors and detructors that do exactly what they sound like they should do. You almost never run into destructors in Python though, it does its own garbage collection.
+#+BEGIN_SRC python
+class PartyAnimal:
+    x = 0
+    name = ""
+        def __init__(self, name):
+            self.name = name
+            print('This is the constructor')
+
+        def party(self):
+            self.x = self.x + 1
+            print('I am a normal method and have been called ', self.x)
+
+        def __del__(self):
+            print('I am the destructor, I am a dunder method')
+
+    class FootballFan(PartyAnimal):
+        point = 0
+        def touchdown(self):
+            self.points = self.points + 7
+            self.party()
+            print(self.points, 'points', self.party, 'drinks')
+
+    s = PartyAnimal('Butthead')
+    s.party()
+
+    j = FootballFan('Beavis')
+    j.party()
+    j.touchdown()
+#+END_SRC
+
++ We can extend or subclass an existing class. The new class inherits from the existing or parent class.
++ The subclass will have the methods and attributes of the parentclass as well as any new ones you add.
++ Because FootballFan is a subclass of PartyAnimal when we create j (Beavis) it will use the PartyAnimal constructor. j has all the methods and variables as s
++ /Everything in Python is an object so OOP is inherent in the way Python works/
+
+*** Reading
+Once a code base reaches a certain size various methodologies like OOP become important to both organize the codebase and provide a mental model for the programmers trying to work with the code.
+
+** Chapter 15 Databases
+Focus will be on SQLite as it is built in to Python.
++ SQLite is designed to be embedded into other applications to store and retrieve data.
++ https://github.com/sqlitebrowser/sqlitebrowser/wiki
++ A database has a more defined structure than the basic Python structures like dictionaries and lists.
++ When creating a table in a SQL database we need to define in advance the name and datatype of the column. This predefined structure allows the database software to optimize the data storage and retrieval process beyond what more general structures can.
++ to create a database file and a table named Tracks with two columns:
+
+    #+BEGIN_SRC python
+    import sqlite3
+
+    conn = sqlite3.connect('music.sqlite')
+    cur = conn.cursor()
+
+    cur.execute('DROP TABLE IF EXISTS Tracks')
+    cur.execute('CREATE TABLE Tracks (title TEXT, plays INTEGER)')
+
+    conn.close()
+  #+END_SRC
++ the cursor is like a file handle.
++ once the cursor object is created we can use the execute() method to make changes to the contents of the database
++ Once the database and table are set up we can insert data
++ commit() does the actual write operation. /I am guessing that execute writes the commands to the cursor object and commit() applies the data in the structure to the database/
+#+begin_src python
+import sqlite3
+
+conn = sqlite3.connect('music.sqlite')
+cur = conn.cursor()
+
+cur.execute('INSERT INTO Tracks (title, plays) VALUES (?, ?)',
+    ('Thunderstruck', 20))
+cur.execute('INSERT INTO Tracks (title, plays) VALUES (? ,?)',
+    ('My Way', 15))
+conn.commit()
+
+print('Tracks:')
+cur.execute('SELECT title, plays FROM Tracks')
+for row in cur:
+     print(row)
+
+cur.execute('DELETE FROM Tracks WHERE plays < 100')
+comm.commit()
+
+cur.close()
+#+end_src
+
++ We then use the SELECT command to read the title and plays columns from the table Tracks. We can then loop through the rows in the cursor.
++ In actuality the cursor loads the rows as we ask for them (otherwise it would be impossible to search through the contents of a database due to memory constraints)
++ The rows we get from the cursor are in the form of Python tuples
++ Python2 code will have strings that start with u' indicating unicode strings rather than the byte based strings python2 used for strings.
++ The last command DELETES the two rows we wrote to the table, this shows the ability of SQL to express selection criteria.
+
+**** 15.5 SQL
+*** Video part 1
+SQL abstracts the details imparitive lamguage
