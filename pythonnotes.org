@@ -1259,4 +1259,4 @@ cur.close()
 
 **** 15.5 SQL
 *** Video part 1
-SQL abstracts the details imparitive lamguage
+SQL abstracts the details imperative language
