@@ -30,9 +30,6 @@
     else:
         # the rest of the program
   #+END_SRC
-
-  #+RESULTS:
-
   This exception can also be used when there are multiple modules that implement an API to allow one to be used only if the other one is not available without needing to have further code to determine which version was imported.
 + Everything in Python is case sensitive.
 + Modules have several built in attributes. if a module is imported __name__ will be the modules filename (without path info or extension) if the module is run as a standalone __name__ will default to __main__ This can be used for unit testing
@@ -762,7 +759,7 @@ IT is a good idea to put print and other tests in code as you write it so that y
 
 ** Chapter 10 Tuples
 *** Tuples Lecture Notes I, II
-Tuples are like lists but are immutable like strings. They are indexed starting at 0. Instead of using [] when assigning values use () for tuples - though you still use [] when referencing an index. Of the methods and functions used with lists count and index can be used with tuples. Because tuples are immutable they can be used as keys for dictionaries. \
+Tuples are like lists but are immutable like strings. They are indexed starting at 0. Instead of using [] when assigning values to a tuple you only need a comma separated list of values (if only one element append a comma so that python does not create a string), but it is common to  use () to indicate a tuple - though you still use [] when referencing an index. Of the methods and functions used with lists count and index can be used with tuples. Because tuples are immutable they can be used as keys for dictionaries. \
 Tuples are more efficient than lists and if you only need to retrieve data a tuple is a faster and uses less memory. Tuples work well for temporary variables that will only be used briefly. Lists on the other hand are more often used when building up a datastructure.
 + Tuples can be used on the left-hand side of an assignment statement. (x,y) = (4, 'fred') you can return tuple from a function.
 + Tuples are comparable - The comparison goes through the items in order comparing each value to the corresponding value in the tuple being compared until Python finds an element that differs. This also works with < and > comparing index 0 and if they are equal comparing each subsequent element until one is larger or smaller. The rest of the values are not compared so (0, 1, 10000) is < (0, 2, 3). *How are comparisons between differing datatypes handled?*
@@ -884,7 +881,32 @@ Compound datastructures can cause error if the programmer looses track of the sh
 
 ** Chapter 12 Networked Programs
 *** Notes from text
-Requesting and parsing HTTP 
+    You can communicate with a wide range of servers using sockets. As sockets is handling the low level connection, you just need to make sure that you send and recieve code according to the protocol the server is using. 
+
+**** HTTP 
+     Python has built in support for common networking protocols called sockets. Interface is much like the one for files, but is 2-way. 
+     Protocols tell the software who is supposed to talk when, and describes the format used on the wire. 
+**** Reading binary files
+     Since this is the most common protocol there is a library to make implementing HTTP easier.
+     + HTTP uses byte objects instead of strings, use encode() and decode() to convert.
+     + you can use b'' to specify a variable be stored as a byte object instead of encode()
+     + To recieve data (like an image) we can store it in a string while the program is running, Then remove the HTTP header and save the data in a file.
+    + flow control and buffering can be messed with when working at this low level.
+    
+    Rather than manually send and recieve data through sockets we can use urllib. You only need to specify the url and can treat it like reading any other file as urllib handles retrieving it. 
+    To retrieve and decode a file
+    #+BEGIN_SRC python
+    import urllib.request 
+
+    fhand = urllib.request.urlopen('http://data.pr4e.org/romeo.txt')
+    for line in fhand:
+        print(line.decode.strip())
+    #+END_SRC
+    You don't need to worry about the HTTP headers as urllib removes them automagically.
+**** Parsing HTML and scraping the web
++ simple way to find what you are looking for in a bunch of HTML files is with REGEX
++ unfortunately many webpages are poorly coded so using a html parsing library like BeautifulSoup yields better results.
++ multiple libraries available for the task,
 *** Video Lecture Part 1, 2
 **** How networking works - This will start at the transport layer
 We will assume the lower levels are working and we have a socket connection to the networked resource we are trying to communicate with. A TCP port number, by convention, matches the type of service we are trying to connect to. Python ha built in support for TCP sockets. =import socket= to use in your script. You then need to create a sockket object with =mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)= and then associate it with a connection =mysick.connect( ('data.py4e.org', 80) )= This creates a stream socket rather than a block socket.
@@ -965,6 +987,13 @@ Why scrape?
 + creating a search engine
 
 Some web pages don't like being scraped and will try and block you (or shut down accounts if you have one) Often html is creative in ways that make using regex to parse them difficult. The BeautifulSoup library from www.crummy.com handles parsing html for you.
+As this library is an important one I will have more notes on it in a dedicated file.
+**** Worked example BeautifulSoup
+
+*** exercises
+**** Explore HTTP Request Response
+reminds me of a how to CTF Challenge
+**** Scraping soup
 
 ** Chapter 13 Using Web services
 *** Video Web Services Part 1
@@ -1231,32 +1260,3 @@ Focus will be on SQLite as it is built in to Python.
 #+begin_src python
 import sqlite3
 
-conn = sqlite3.connect('music.sqlite')
-cur = conn.cursor()
-
-cur.execute('INSERT INTO Tracks (title, plays) VALUES (?, ?)',
-    ('Thunderstruck', 20))
-cur.execute('INSERT INTO Tracks (title, plays) VALUES (? ,?)',
-    ('My Way', 15))
-conn.commit()
-
-print('Tracks:')
-cur.execute('SELECT title, plays FROM Tracks')
-for row in cur:
-     print(row)
-
-cur.execute('DELETE FROM Tracks WHERE plays < 100')
-comm.commit()
-
-cur.close()
-#+end_src
-
-+ We then use the SELECT command to read the title and plays columns from the table Tracks. We can then loop through the rows in the cursor.
-+ In actuality the cursor loads the rows as we ask for them (otherwise it would be impossible to search through the contents of a database due to memory constraints)
-+ The rows we get from the cursor are in the form of Python tuples
-+ Python2 code will have strings that start with u' indicating unicode strings rather than the byte based strings python2 used for strings.
-+ The last command DELETES the two rows we wrote to the table, this shows the ability of SQL to express selection criteria.
-
-**** 15.5 SQL
-*** Video part 1
-SQL abstracts the details imperative language
