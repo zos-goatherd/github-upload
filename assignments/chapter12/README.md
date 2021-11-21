@@ -23,3 +23,7 @@ Change the socket program so that it only shows data after the headers and a bla
 ## Autograder: Scraping HTML data with bs4
 
 Use urllib to retrieve the html file from the given url. Find all the <span> tags, convert the content to integers, and sum them up.
+
+## Autograder Following Links in Python 
+
+Expand on urllinks.py, use urllib to read HTML from the file given, extract the href= values from anchor tags, scan for a tag that is in a particular position relative to the first name in the list, follow the link and repeat the process a number of times and report the last name I find. 
