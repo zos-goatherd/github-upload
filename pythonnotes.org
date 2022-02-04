@@ -38,6 +38,7 @@
 + Modules have several built in attributes. if a module is imported __name__ will be the modules filename (without path info or extension) if the module is run as a standalone __name__ will default to __main__ This can be used for unit testing
 
 ** Chapter 2 - datatypes
+*** Native Datatypes
 1. Boolean
 2. Numbers: can be integers fractions, floats, or complex
 3. Strings: sequence of unicode characters
@@ -78,6 +79,7 @@ Plus lots of other stuff since everything is an object in Python.
    - Lists in a Boolean context
      - empty lists evaluate to false
      - a list with at least one item is true - even if the value is False.
+
 *** Tuples
 A tuple is an immutable list, so great for functional programming. my_tuple = ("I", "love", "clojure", "True", 42, 23, 93)
 + Tuple are ordered and have 0 based indices
@@ -114,6 +116,7 @@ A set is an unordered collection of unique values of any immutable datatype. Wit
 + a_set.issubset(b_set) returns true is all elements in a are also in b
 + b_set.issuperset(a_set) reverse of above
 + boolean value of an empty set is False, other sets (ones with at least one element) are True. Value of the elements does not matter.... so a set that contains the string False and nothing else will evaluate to true.
+
 *** Dictionaries
 - Unordered
 - key value pairs.
@@ -159,7 +162,6 @@ os.path contains functions for manipulating file and directory names
 
 **** listing directiries
 - thr Python standard library also has a glob module to make it easier to get the filenames you need from a directory. use import glob to start using globs.
-
 
 
 * Other Sources
@@ -213,6 +215,7 @@ Tutorial that gets into more advanced elements of Python
 
 + bool - usually created in literal form.
 + int and float
+
 
 * Python for Everybody - I can at least get credit for doing this
 + Assignments and badges from webpage. Coursera course!
@@ -328,17 +331,21 @@ except:
 
 + empty string is represented by '' and is length 0
 + You can't use someString[someIndex] on the left of an assignment operator to change the character at that location
-+ ?Can strings be changed? I assumed that you needed to create a new string and then it could be assigned to the name of the old string.... 'str' obect does not support item assignment... strings are immutable 
++  I assumed that you needed to create a new string and then it could be assigned to the name of the old string.... 'str' obect does not support item assignment... strings are immutable 
 *** String methods
 + comparison operator can be used to put words in alphabetical order. NOTE: All uppercase letters come before the lowercase letters. To compare words without error it is usual to convert them into a common format - often all lowercase before performing the comparison. 
 + Strings are objects and therefore have methods that are built into the object and are available to each instance
 + Python function dir lists available methods for an object. Type function shows the type of an object
 + methods are called by appending the method name to the object using dot notation. This is called invoking the method 
+
+
 + The in operator is a boolean operator that takes two strings and return True if the first appear as a substring in the second.
+
 + Python dir function lists the methods available for an object
 + type function shows the type of an object
 + help gets simple documentation on a method.
 + python.org is a more complete source of documentation.
+
 + the find method finds the index of a substring in a string. Can also use a second argument to indicate where the search should start.
 + strip method removes white space characters such as space tab and newline.
 + myString.startswith('someString') returns True if myString starts with someString
